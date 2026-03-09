@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cycling Apparel Size Analyzer</title>
     <meta property="og:title" content="Cycling Apparel Size Analyzer">
     <meta property="og:description" content="Waist vs Hip Body Measurements + Brand Size Boxes">
     <style>
@@ -41,6 +42,20 @@
             font-size: 14px;
         }
 
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .header p {
+                font-size: 12px;
+            }
+        }
+
         .controls {
             display: flex;
             gap: 15px;
@@ -65,6 +80,29 @@
             font-size: 13px;
             font-weight: 500;
             transition: all 0.2s;
+        }
+
+        @media (max-width: 480px) {
+            .controls {
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+
+            .brand-tabs {
+                gap: 6px;
+            }
+
+            .brand-tab {
+                padding: 8px 12px;
+                font-size: 11px;
+                border-width: 1.5px;
+            }
+
+            .all-brands-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+                border-width: 1.5px;
+            }
         }
 
         .brand-tab:hover {
@@ -114,6 +152,17 @@
             min-height: 600px;
         }
 
+        @media (max-width: 480px) {
+            .chart-container {
+                padding: 12px;
+                border-radius: 6px;
+            }
+
+            svg {
+                min-height: 400px;
+            }
+        }
+
         .stats {
             display: flex;
             gap: 20px;
@@ -150,6 +199,38 @@
             background-color: #f9f9f9;
             border-radius: 4px;
             font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                gap: 12px;
+                margin-top: 12px;
+            }
+
+            .stat-box {
+                min-width: 100%;
+                padding: 12px;
+                border-left-width: 3px;
+            }
+
+            .stat-box h3 {
+                font-size: 10px;
+            }
+
+            .stat-box p {
+                font-size: 16px;
+            }
+
+            .legend {
+                margin-top: 12px;
+                padding: 12px;
+                font-size: 10px;
+            }
+
+            .legend-item {
+                margin-right: 12px;
+                margin-bottom: 6px;
+            }
         }
 
         .legend-item {
@@ -261,9 +342,12 @@
 
         function draw() {
             const svg = document.getElementById('chart');
-            const width = Math.min(1000, svg.parentElement.offsetWidth - 40);
-            const height = 600;
-            const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+            const isMobile = window.innerWidth <= 480;
+            const width = isMobile ? svg.parentElement.offsetWidth - 24 : Math.min(1000, svg.parentElement.offsetWidth - 40);
+            const height = isMobile ? 400 : 600;
+            const margin = isMobile 
+                ? { top: 15, right: 20, bottom: 40, left: 45 }
+                : { top: 20, right: 30, bottom: 50, left: 60 };
             const plotWidth = width - margin.left - margin.right;
             const plotHeight = height - margin.top - margin.bottom;
 
@@ -333,16 +417,16 @@
             xLabel.setAttribute('x', width / 2);
             xLabel.setAttribute('y', height - 10);
             xLabel.setAttribute('text-anchor', 'middle');
-            xLabel.setAttribute('font-size', '14');
+            xLabel.setAttribute('font-size', isMobile ? '11' : '14');
             xLabel.setAttribute('fill', '#333');
             xLabel.textContent = 'Waist (inches)';
             svg.appendChild(xLabel);
 
             const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             yLabel.setAttribute('x', -height / 2);
-            yLabel.setAttribute('y', 15);
+            yLabel.setAttribute('y', isMobile ? 12 : 15);
             yLabel.setAttribute('text-anchor', 'middle');
-            yLabel.setAttribute('font-size', '14');
+            yLabel.setAttribute('font-size', isMobile ? '11' : '14');
             yLabel.setAttribute('fill', '#333');
             yLabel.setAttribute('transform', 'rotate(-90)');
             yLabel.textContent = 'Hip (inches)';
@@ -361,9 +445,9 @@
 
                 const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 label.setAttribute('x', x);
-                label.setAttribute('y', height - margin.bottom + 20);
+                label.setAttribute('y', height - margin.bottom + (isMobile ? 16 : 20));
                 label.setAttribute('text-anchor', 'middle');
-                label.setAttribute('font-size', '12');
+                label.setAttribute('font-size', isMobile ? '9' : '12');
                 label.setAttribute('fill', '#666');
                 label.textContent = i;
                 svg.appendChild(label);
@@ -380,10 +464,10 @@
                 svg.appendChild(tick);
 
                 const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                label.setAttribute('x', margin.left - 15);
+                label.setAttribute('x', margin.left - (isMobile ? 8 : 15));
                 label.setAttribute('y', y + 4);
                 label.setAttribute('text-anchor', 'end');
-                label.setAttribute('font-size', '12');
+                label.setAttribute('font-size', isMobile ? '9' : '12');
                 label.setAttribute('fill', '#666');
                 label.textContent = i;
                 svg.appendChild(label);
@@ -450,7 +534,7 @@
                     label.setAttribute('y', (y1 + y2) / 2);
                     label.setAttribute('text-anchor', 'middle');
                     label.setAttribute('dominant-baseline', 'middle');
-                    label.setAttribute('font-size', '11');
+                    label.setAttribute('font-size', isMobile ? '9' : '11');
                     label.setAttribute('font-weight', 'bold');
                     label.setAttribute('fill', brandColors[selectedBrand]);
                     label.textContent = size;
